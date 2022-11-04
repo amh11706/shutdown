@@ -25,11 +25,6 @@ func AddTask(f func(context.Context)) {
 
 // Trigger manually triggers a shutdown.
 func Trigger() {
-	quit <- syscall.SIGTERM
-}
-
-func Watch() {
-	<-quit
 	log.Println("Shutting down")
 	Closing = true
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -38,4 +33,10 @@ func Watch() {
 	}
 	cancel()
 	log.Println("Shutdown complete")
+}
+
+// Watch listens to os.Interrupt or syscall.SIGTERM and triggers a shutdown.
+func Watch() {
+	<-quit
+	Trigger()
 }
