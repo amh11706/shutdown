@@ -23,6 +23,11 @@ func AddTask(f func(context.Context)) {
 	}
 }
 
+// Trigger manually triggers a shutdown.
+func Trigger() {
+	quit <- syscall.SIGTERM
+}
+
 func Watch() {
 	<-quit
 	log.Println("Shutting down")
